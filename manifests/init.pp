@@ -42,8 +42,36 @@
 #
 # Copyright 2018 Your name here, unless otherwise noted.
 #
-class apach {
-  class { ' apach::install ' :} ->
-  class { ' apach::service':}
+#class apach {
+#  class { ' apach::install ' :} ->
+#  class { ' apach::service':}
+#
+#}
 
+
+
+class apach {
+  package { 'httpd':
+    ensure => installed,
+    name => 'httpd',
+  }
+
+  service { 'httpd':
+    ensure => running,
+    enable => true,
+    require => Package[httpd],
+
+  }
+  file {'/var/www/html/index.html':
+    ensure => file,
+    content => "ci cd automation",
+
+
+  }
+  exec { 'echo "from CI CD" > /var/www/html/index.html':
+    cwd => '/var/www/html',
+    creates => '/var/www/html/index.html',
+    path    => ['/usr/bin', '/usr/sbin',],
+  }
 }
+
